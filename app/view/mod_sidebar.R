@@ -9,8 +9,8 @@ ui <- function(id, source_dir) {
   tagList(
       selectInput(inputId = ns("dac"), label = "DAC", choices = list.dirs(source_dir, recursive = F, full.names = F)),
       selectInput(inputId = ns("wmo"), label = "WMO", choices = ''),
-      selectInput(inputId = ns("param"), label = "Parameter", choices = c('DOXY', 'CHLA', 'BBP700',
-                                                                          'CDOM', 'TRANSMITTANCE_PARTICLE_BEAM_ATTENUATION660', 'NITRATE',
+      selectInput(inputId = ns("param"), label = "Parameter", choices = c('TEMP', 'PSAL', 'DOXY', 'CHLA', 'BBP700',
+                                                                          'CDOM', 'CP660', 'NITRATE',
                                                                           'PH_IN_SITU_FREE', 'DOWN_IRRADIANCE380', 'DOWN_IRRADIANCE412',
                                                                           'DOWN_IRRADIANCE490', 'DOWNWELLING_PAR')),
       selectInput(inputId = ns("profile"), label = "profile", choices = '')

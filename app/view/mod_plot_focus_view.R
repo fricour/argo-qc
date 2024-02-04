@@ -20,9 +20,6 @@ ui <- function(id) {
 server <- function(id, source_dir, user_selection) {
   moduleServer(id, function(input, output, session){
 
-    #browser()
-    print(user_selection)
-
     data <- reactive({
       ncfile <- paste0(source_dir, user_selection$dac(), '/', user_selection$wmo(), '/profiles/', user_selection$profile())
       process_argo$extract_one_parameter(ncfile = ncfile, user_selection$param())
@@ -30,7 +27,14 @@ server <- function(id, source_dir, user_selection) {
 
     output$var_plot <- renderPlotly({
       validate(need(nrow(data() > 0), message = "No data."))
+      print(data())
       plot_argo$plotly_one_parameter(data(), user_selection$param())
     })
+
+    # return generic parameter from the selected profile
+    return(list(
+      lat = reactive(unique(data()$latitude)),
+      lon = reactive(unique(data()$longitude))
+    ))
   })
 }

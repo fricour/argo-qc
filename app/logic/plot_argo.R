@@ -19,8 +19,8 @@ get_plot_attributes <- function(parameter){
     return(list(parameter_name = parameter, xdigits = "%{x:,.1f} mg/m<sup>3</sup>", textdigits = "%{text:,.1f} mg/m<sup>3</sup>", type = "-"))
   }else if(parameter == 'BBP700'){
     return(list(parameter_name = parameter, xdigits = "%{x:,.1e} m<sup>-1</sup>", textdigits = "%{text:,.1e}  m<sup>-1</sup>", type = "-"))
-  }else if(parameter == 'TRANSMITTANCE_PARTICLE_BEAM_ATTENUATION660'){
-    return(list(parameter_name = 'CP600', xdigits = "%{x:,.2f} m<sup>-1</sup>", textdigits = "%{text:,.2f}  m<sup>-1</sup>", type = "-"))
+  }else if(parameter == 'CP660'){
+    return(list(parameter_name = parameter, xdigits = "%{x:,.2f} m<sup>-1</sup>", textdigits = "%{text:,.2f}  m<sup>-1</sup>", type = "-"))
   }else if(parameter == 'PH_IN_SITU_FREE'){
     return(list(parameter_name = parameter, xdigits = "%{x:,.1f}", textdigits = "%{text:,.1f}", type = "-"))
   }else if(parameter == 'NITRATE'){

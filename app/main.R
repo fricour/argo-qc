@@ -6,6 +6,7 @@ box::use(
 box::use(
   app/view/mod_sidebar,
   app/view/mod_plot_focus_view,
+  app/view/mod_map
 )
 
 # directory where BGC-ARGO data are stored
@@ -22,9 +23,17 @@ ui <- function(id) {
       mod_sidebar$ui(ns("sidebar"), source_dir)
     ),
     # main plot
-    card(
-      card_header("Plot selected variable"),
-      mod_plot_focus_view$ui(ns("plotly_plot")),
+    layout_columns(
+      col_widths = c(9,3),
+      row_heights = c(2,1),
+      card(
+        card_header("Plot selected variable"),
+        mod_plot_focus_view$ui(ns("plotly_plot")),
+      ),
+      card(
+        card_header("Profile position"),
+        mod_map$ui(ns("map_profile"))
+      )
     )
   )
 }
@@ -32,7 +41,13 @@ ui <- function(id) {
 #' @export
 server <- function(id) {
   moduleServer(id, function(input, output, session) {
+    # sidebar module
     user_selection <- mod_sidebar$server("sidebar", source_dir)
-    mod_plot_focus_view$server("plotly_plot", source_dir, user_selection)
+
+    # single profile module
+    metadata <- mod_plot_focus_view$server("plotly_plot", source_dir, user_selection)
+
+    # map
+    mod_map$server("map_profile", source_dir, metadata)
   })
 }
