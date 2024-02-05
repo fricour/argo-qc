@@ -1,9 +1,9 @@
 box::use(
   dplyr[filter, group_by],
-  #ggplot2[ggplot, geom_point],
-  plotly[plot_ly, layout, toWebGL],
+  plotly[plot_ly, layout, toWebGL, add_annotations],
   stats[setNames],
-  tibble[tibble]
+  tibble[tibble],
+  oce[argoJuldToTime]
 )
 
 #' @export
@@ -16,9 +16,9 @@ get_plot_attributes <- function(parameter){
   }else if(parameter == 'DOXY'){
     return(list(parameter_name = parameter, xdigits = "%{x:,.1f} &mu;mol/kg", textdigits = "%{text:,.1f} &mu;mol/kg", type = "-"))
   }else if(parameter == 'CHLA'){
-    return(list(parameter_name = parameter, xdigits = "%{x:,.1f} mg/m<sup>3</sup>", textdigits = "%{text:,.1f} mg/m<sup>3</sup>", type = "-"))
+    return(list(parameter_name = parameter, xdigits = "%{x:,.1f} mg/m<sup>3</sup>", textdigits = "%{text:,.1f} mg/m<sup>3</sup>", type = "log"))
   }else if(parameter == 'BBP700'){
-    return(list(parameter_name = parameter, xdigits = "%{x:,.1e} m<sup>-1</sup>", textdigits = "%{text:,.1e}  m<sup>-1</sup>", type = "-"))
+    return(list(parameter_name = parameter, xdigits = "%{x:,.1e} m<sup>-1</sup>", textdigits = "%{text:,.1e}  m<sup>-1</sup>", type = "log"))
   }else if(parameter == 'CP660'){
     return(list(parameter_name = parameter, xdigits = "%{x:,.2f} m<sup>-1</sup>", textdigits = "%{text:,.2f}  m<sup>-1</sup>", type = "-"))
   }else if(parameter == 'PH_IN_SITU_FREE'){
@@ -62,6 +62,15 @@ plotly_one_parameter <- function(data, parameter){
   # get plot attributes based on parameter_name
   plot_attributes <- get_plot_attributes(parameter)
 
+  # check if data are adjusted or not
+  if(unique(data$adjusted_exist)){
+    comment <- "ADJUSTED DATA"
+  }else{
+    comment <- "NON-ADJUSTED DATA"
+  }
+
+
+
   # make plotly plot
   plot <- tmp |> group_by(parameter) |> plot_ly(x = ~value, y = ~depth, type = 'scatter', mode = 'markers',
                                                          text = ~qc,
@@ -69,9 +78,9 @@ plotly_one_parameter <- function(data, parameter){
                                                          colors = pal,
                                                          legendgroup = ~qc,
                                                          hovertemplate = paste(" DEPTH: %{y:,.0f} m<br>", paste0(plot_attributes[[1]],": ",plot_attributes[[2]],"<br>"), paste0('QC: %{text:, .0f}'))) |>
-    layout(xaxis = list(title = plot_attributes[[1]], type = plot_attributes[[3]]),
+    layout(title = paste0(comment, " - profile taken on ", as.Date(argoJuldToTime(unique(data$juld)))), xaxis = list(title = plot_attributes[[1]], type = plot_attributes[[4]]),
                    yaxis = list(title = 'DEPTH', autorange = "reversed"),
-                   showlegend = FALSE) #%>% plotly::toWebGL()
+                   showlegend = FALSE) # |> plotly::toWebGL()
 
   return(plot)
 

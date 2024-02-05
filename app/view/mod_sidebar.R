@@ -1,5 +1,6 @@
 box::use(
-  shiny[moduleServer, NS, selectInput, reactive, tagList, updateSelectInput, observe],
+  shiny[moduleServer, NS, selectInput, reactive, tagList, updateSelectInput, observe, h4],
+  shinyhelper[helper]
 )
 
 #' @export
@@ -7,13 +8,14 @@ ui <- function(id, source_dir) {
   ns <- NS(id)
 
   tagList(
+    h4("User selection") |> helper(type = "markdown", icon = "circle-question", content = "help_sidebar"),
       selectInput(inputId = ns("dac"), label = "DAC", choices = list.dirs(source_dir, recursive = F, full.names = F)),
       selectInput(inputId = ns("wmo"), label = "WMO", choices = ''),
       selectInput(inputId = ns("param"), label = "Parameter", choices = c('TEMP', 'PSAL', 'DOXY', 'CHLA', 'BBP700',
                                                                           'CDOM', 'CP660', 'NITRATE',
                                                                           'PH_IN_SITU_FREE', 'DOWN_IRRADIANCE380', 'DOWN_IRRADIANCE412',
                                                                           'DOWN_IRRADIANCE490', 'DOWNWELLING_PAR')),
-      selectInput(inputId = ns("profile"), label = "profile", choices = '')
+      selectInput(inputId = ns("profile"), label = "Profile", choices = '')
     )
 }
 

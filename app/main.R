@@ -1,6 +1,7 @@
 box::use(
   shiny[moduleServer, NS],
-  bslib[...]
+  bslib[...],
+  shinyhelper[observe_helpers]
 )
 
 box::use(
@@ -41,6 +42,10 @@ ui <- function(id) {
 #' @export
 server <- function(id) {
   moduleServer(id, function(input, output, session) {
+
+    # helpfiles
+    observe_helpers(help_dir = "./helpfiles")
+
     # sidebar module
     user_selection <- mod_sidebar$server("sidebar", source_dir)
 
